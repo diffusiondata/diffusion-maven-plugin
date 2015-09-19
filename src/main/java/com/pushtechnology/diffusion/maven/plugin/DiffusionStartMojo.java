@@ -23,6 +23,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
+import java.io.File;
+
 
 /**
  *  <p>
@@ -51,6 +53,12 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo
      * @see AbstractDiffusionMojo#checkPomConfiguration()
      */
     public void checkPomConfiguration () throws MojoExecutionException {
+        if (diffusionConfigDir != null) {
+            File configDir = new File(diffusionConfigDir);
+            if (!configDir.exists() || !configDir.isDirectory()) {
+                throw new MojoExecutionException("Invalid diffusionConfigDir");
+            }
+        }
     }
 
     @Override

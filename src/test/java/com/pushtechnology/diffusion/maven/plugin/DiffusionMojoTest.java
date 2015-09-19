@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.util.ReaderFactory;
@@ -66,7 +67,7 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
         super.tearDown();
     }
 
-    private DiffusionStartMojo getMojo(final File buildDirectory) throws Exception {
+    private DiffusionStartMojo getStartMojo(final File buildDirectory) throws Exception {
         final DiffusionStartMojo mojo = (DiffusionStartMojo) lookupMojo("start", simplePom);
 
 //        setVariableValueToObject(mojo, "buildDirectory",
@@ -74,19 +75,44 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
 //        setVariableValueToObject(mojo, "finalName", "mydar");
 //        setVariableValueToObject(mojo, "outputDirectory",
 //            new File("some missing directory"));
-        setVariableValueToObject(mojo, "diffusionConfigDir",
-            "some missing directory");
+
         setVariableValueToObject(mojo, "execution",
                 new DiffusionExecutionStub(null, "start", "boot"));
 
         return mojo;
     }
 
-    public void testBasic() throws Exception {
+    public void testBasicInvalid() throws Exception {
 
-        final DiffusionStartMojo mojo = getMojo(buildDirectory);
+        final DiffusionStartMojo mojo = getStartMojo(buildDirectory);
+        setVariableValueToObject(mojo, "project",
+                new DiffusionProjectStub(buildDirectory, simplePom));
+        setVariableValueToObject(mojo, "diffusionConfigDir",
+                "some missing directory");
+        try {
+            mojo.execute();
+            assertTrue(false);
+        } catch (MojoExecutionException mee) {
+            assertEquals(mee.getMessage(), "Invalid diffusionConfigDir");
+        }
+    }
+
+    public void testBasicStart() throws Exception {
+
+        final DiffusionStartMojo mojo = getStartMojo(buildDirectory);
         setVariableValueToObject(mojo, "project",
             new DiffusionProjectStub(buildDirectory, simplePom));
+
+        mojo.execute();
+    }
+
+    public void testBasicStop() throws Exception {
+
+        final DiffusionStopMojo mojo = (DiffusionStopMojo) lookupMojo("stop", simplePom);
+        setVariableValueToObject(mojo, "execution",
+                new DiffusionExecutionStub(null, "stop", "shutdown"));
+        setVariableValueToObject(mojo, "project",
+                new DiffusionProjectStub(buildDirectory, simplePom));
 
         mojo.execute();
     }

@@ -15,6 +15,13 @@
                         </goals>
                         <phase>pre-integration-test</phase>
                     </execution>
+                    <execution>
+                        <id>shutdown</id>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                        <phase>post-integration-test</phase>
+                    </execution>
                 </executions>
                 <configuration/>
             </plugin>

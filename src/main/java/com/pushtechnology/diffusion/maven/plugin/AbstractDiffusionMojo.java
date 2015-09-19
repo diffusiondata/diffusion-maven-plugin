@@ -32,8 +32,10 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import com.pushtechnology.diffusion.api.APIException;
 import com.pushtechnology.diffusion.api.server.DiffusionServer;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -194,7 +196,40 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
         startDiffusion();
     }
 
-    
+/*
+    private Plugin lookupPlugin(String key)
+    {
+        List plugins = project.getBuildPlugins();
+
+        for (Iterator iterator = plugins.iterator(); iterator.hasNext();)
+        {
+            Plugin plugin = (Plugin) iterator.next();
+            if(key.equalsIgnoreCase(plugin.getKey()))
+                return plugin;
+        }
+        return null;
+    }
+  */
+
+    public Properties configureSystemProperties() {
+        Properties props = new Properties();
+        if (systemProperties != null)
+        {
+            Iterator itor = systemProperties.getSystemProperties().iterator();
+            while (itor.hasNext())
+            {
+                SystemProperty prop = (SystemProperty)itor.next();
+                props.put(prop.getName(), prop.getValue());
+            }
+        }
+
+        // Fix up diffusion.home from environment if set.
+        if (props.getProperty("diffusion.home") == null && System.getenv("DIFFUSION_HOME") != null) {
+            props.setProperty("diffusion.home", System.getenv("DIFFUSION_HOME"));
+        }
+        return props;
+    }
+
     public void configurePluginClasspath() throws MojoExecutionException
     {  
         //if we are configured to include the provided dependencies on the plugin's classpath
@@ -266,7 +301,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
             printSystemProperties();
 
             if (server == null)
-                server = new DiffusionServer();
+                server = new DiffusionServer(configureSystemProperties(), true);
 
             //ServerSupport.configureConnectors(server, httpConnector);
 
@@ -277,10 +312,13 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
             //particular Jetty version
             finishConfigurationBeforeStart();
 
-            // start Jetty
+            // start Diffusion
+            // Thread thread = new Thread(new DiffusionServerRunnable(this.server));
+            // thread.setDaemon(true);
+            // thread.start();
             this.server.start();
 
-            getLog().info("Started Jetty Server");
+            getLog().info("Started Diffusion Server");
 
             if ( dumpOnStart )
             {
@@ -380,5 +418,44 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
         }
         
         return excluded;
+    }
+
+    private class DiffusionServerRunnable implements Runnable {
+        private DiffusionServer server;
+        private volatile boolean shutdown = false;
+
+        DiffusionServerRunnable(DiffusionServer server) {
+            this.server = server;
+        }
+
+        public void shutdown() {
+            this.shutdown = true;
+            synchronized (this) {
+                this.notifyAll();
+            }
+        }
+
+        @Override
+        public void run() {
+            try {
+                this.server.start();
+                synchronized (this) {
+                    while (!shutdown) {
+                        try {
+                            this.wait();
+                        }
+                        catch (InterruptedException e) {
+                            getLog().error("Shutdown interrupted", e);
+                        }
+                    }
+                }
+                if (shutdown) {
+                    server.stop();
+                }
+            }
+            catch (APIException ae) {
+                getLog().error("Could not start Diffusion server", ae);
+            }
+        }
     }
 }

@@ -28,6 +28,7 @@ import java.net.Socket;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -42,11 +43,13 @@ import org.apache.maven.plugins.annotations.Mojo;
 @Mojo(name = "stop", defaultPhase = LifecyclePhase.VALIDATE)
 public class DiffusionStopMojo extends AbstractMojo
 {
-    
+
+    @Component (role = org.apache.maven.plugin.Mojo.class, hint = "start")
+    protected DiffusionStartMojo startMojo;
+
     /**
      * Port to listen to stop jetty on sending stop command
      * @parameter
-     * @required
      */
     protected int stopPort;
     
@@ -54,7 +57,6 @@ public class DiffusionStopMojo extends AbstractMojo
      * Key to provide when stopping jetty on executing java -DSTOP.KEY=&lt;stopKey&gt; 
      * -DSTOP.PORT=&lt;stopPort&gt; -jar start.jar --stop
      * @parameter
-     * @required
      */
     protected String stopKey;
     
@@ -71,6 +73,8 @@ public class DiffusionStopMojo extends AbstractMojo
 
     public void execute() throws MojoExecutionException, MojoFailureException 
     {
+        getLog().info("Start mojo is " + startMojo);
+        /*
         if (stopPort <= 0)
             throw new MojoExecutionException("Please specify a valid port"); 
         if (stopKey == null)
@@ -117,6 +121,7 @@ public class DiffusionStopMojo extends AbstractMojo
         {
             getLog().error(e);
         }
+        */
     }
 
     public int getStopPort() {
