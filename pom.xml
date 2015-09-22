@@ -93,11 +93,6 @@
             <version>${pluginToolsVersion}</version>
             <scope>provided</scope>
         </dependency>
-        <!--dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
-            <version>8.1.14.v20131031</version>
-        </dependency-->
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-tools-api</artifactId>
@@ -108,11 +103,6 @@
                     <artifactId>junit</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.pushtechnology.internal.diffusion.test</groupId>
-            <artifactId>embedded-testsupport</artifactId>
-            <version>5.5.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugin-testing</groupId>

@@ -49,7 +49,7 @@ public class DiffusionModelStub extends Model {
 
     @Override
     public String getGroupId() {
-	return "com.pushtechnology.mvndar.test";
+	return "com.pushtechnology.diffusion.maven.plugin.test";
     }
 
     @Override

@@ -18,125 +18,26 @@
 
 package com.pushtechnology.diffusion.maven.plugin;
 
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.OutputStream;
-import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.Socket;
-
-import org.apache.maven.plugin.AbstractMojo;
+import com.pushtechnology.diffusion.api.server.DiffusionServer;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 /**
- * DiffusionStopMojo - stops a running instance of jetty.
- * The ff are required:
- * -DstopKey=someKey
- * -DstopPort=somePort
+ * DiffusionStopMojo - stops a running instance of Diffusion.
  *
- * @description Stops diffusion that is configured with &lt;stopKey&gt; and &lt;stopPort&gt;.
+ * @description Stops diffusion
  */
 @Mojo(name = "stop", defaultPhase = LifecyclePhase.VALIDATE)
-public class DiffusionStopMojo extends AbstractMojo
-{
+public class DiffusionStopMojo extends AbstractDiffusionMojo {
+    @Override
+    public void checkPomConfiguration() throws MojoExecutionException {
 
-    @Component (role = org.apache.maven.plugin.Mojo.class, hint = "start")
-    protected DiffusionStartMojo startMojo;
-
-    /**
-     * Port to listen to stop jetty on sending stop command
-     * @parameter
-     */
-    protected int stopPort;
-    
-    /**
-     * Key to provide when stopping jetty on executing java -DSTOP.KEY=&lt;stopKey&gt; 
-     * -DSTOP.PORT=&lt;stopPort&gt; -jar start.jar --stop
-     * @parameter
-     */
-    protected String stopKey;
-    
-    /**
-     * Max time in seconds that the plugin will wait for confirmation that jetty has stopped.
-     * @parameter
-     */
-    protected int stopWait;
-    
- 
-    
-    
-    
-
-    public void execute() throws MojoExecutionException, MojoFailureException 
-    {
-        getLog().info("Start mojo is " + startMojo);
-        /*
-        if (stopPort <= 0)
-            throw new MojoExecutionException("Please specify a valid port"); 
-        if (stopKey == null)
-            throw new MojoExecutionException("Please specify a valid stopKey");  
-
-        //Ensure jetty Server instance stops. Whether or not the remote process
-        //also stops depends whether or not it was started with ShutdownMonitor.exitVm=true
-        String command = "forcestop"; 
-       
-        try
-        {        
-            Socket s=new Socket(InetAddress.getByName("127.0.0.1"),stopPort);
-            s.setSoLinger(false, 0);
-
-            OutputStream out=s.getOutputStream();
-            out.write((stopKey+"\r\n"+command+"\r\n").getBytes());
-            out.flush();
-
-            if (stopWait > 0)
-            {      
-                s.setSoTimeout(stopWait * 1000);
-                s.getInputStream();
-
-                getLog().info("Waiting "+stopWait+" seconds for jetty to stop");
-                LineNumberReader lin = new LineNumberReader(new InputStreamReader(s.getInputStream()));
-                String response;
-                boolean stopped = false;
-                while (!stopped && ((response = lin.readLine()) != null))
-                {
-                    if ("Stopped".equals(response))
-                    {
-                        stopped = true;
-                        getLog().info("Server reports itself as stopped");
-                    }                
-                }
-            }
-            s.close();
-        }
-        catch (ConnectException e)
-        {
-            getLog().info("Jetty not running!");
-        }
-        catch (Exception e)
-        {
-            getLog().error(e);
-        }
-        */
     }
 
-    public int getStopPort() {
-        return stopPort;
-    }
-
-    public void setStopPort(int stopPort) {
-        this.stopPort = stopPort;
-    }
-
-    public String getStopKey() {
-        return stopKey;
-    }
-
-    public void setStopKey(String stopKey) {
-        this.stopKey = stopKey;
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        server = (DiffusionServer) project.getProperties().get("startedServerInstance");
+        stopDiffusion();
     }
 }

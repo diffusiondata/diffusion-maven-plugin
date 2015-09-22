@@ -33,6 +33,9 @@ import java.util.Properties;
 import java.util.Set;
 
 import com.pushtechnology.diffusion.api.APIException;
+import com.pushtechnology.diffusion.api.config.ConnectorConfig;
+import com.pushtechnology.diffusion.api.config.LogConfig;
+import com.pushtechnology.diffusion.api.config.ServerConfig;
 import com.pushtechnology.diffusion.api.server.DiffusionServer;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Plugin;
@@ -82,6 +85,13 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
      * @parameter
      */
     protected SystemProperties systemProperties;
+
+    /**
+     * Directory to store Diffusion log files.
+     *
+     * @parameter property="${project.build.directory}/diffusion-server"
+     */
+    protected File logDirectory;
     
     
     /**
@@ -92,27 +102,24 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
      * @parameter alias="diffusionConfig"
      */
     protected String diffusionConfigDir;
-    
-    
-    /**
-     * Port to listen to stop diffusion on executing -DSTOP.PORT=&lt;stopPort&gt;
-     * -DSTOP.KEY=&lt;stopKey&gt; -jar start.jar --stop
-     * 
-     * @parameter
-     */
-    protected int stopPort;
-    
-    
-    /**
-     * Key to provide when stopping diffusion on executing java -DSTOP.KEY=&lt;stopKey&gt;
-     * -DSTOP.PORT=&lt;stopPort&gt; -jar start.jar --stop
-     * 
-     * @parameter
-     */
-    protected String stopKey;
 
     /**
-     * Use the dump() facility of jetty to print out the server configuration to logging
+     * Diffusion Server port
+     *
+     * @parameter default-value="8080"
+     */
+    protected int port;
+
+    /**
+     * Diffusion Server SSL port
+     *
+     * @parameter default-value="8443"
+     */
+    protected int sslPort;
+    
+
+    /**
+     * Use the dump() facility of Diffusion to print out the server configuration to logging
      * 
      * @parameter property="dumponStart" default-value="false"
      */
@@ -125,6 +132,20 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
      * @parameter property="diffusion.skip" default-value="false"
      */
     protected boolean skip;
+
+    /**
+     * Number of milliseconds to wait for the server to start.
+     *
+     * @parameter default-value="60000"
+     */
+    protected long serverStartTimeout = 60000;
+
+    /**
+     * Whether to wait for server deployments to finish before declaring victory
+     *
+     * @parameter default-value="true"
+     */
+    protected boolean waitForDeployments = true;
 
     /**
      * The maven project.
@@ -166,9 +187,6 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
      */
     protected DiffusionServer server;
 
-    protected ServerSupport serverSupport;
-
-
     public abstract void checkPomConfiguration() throws MojoExecutionException;    
     
     /**
@@ -196,22 +214,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
         startDiffusion();
     }
 
-/*
-    private Plugin lookupPlugin(String key)
-    {
-        List plugins = project.getBuildPlugins();
-
-        for (Iterator iterator = plugins.iterator(); iterator.hasNext();)
-        {
-            Plugin plugin = (Plugin) iterator.next();
-            if(key.equalsIgnoreCase(plugin.getKey()))
-                return plugin;
-        }
-        return null;
-    }
-  */
-
-    public Properties configureSystemProperties() {
+    public Properties configureSystemProperties() throws MojoExecutionException {
         Properties props = new Properties();
         if (systemProperties != null)
         {
@@ -227,6 +230,19 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
         if (props.getProperty("diffusion.home") == null && System.getenv("DIFFUSION_HOME") != null) {
             props.setProperty("diffusion.home", System.getenv("DIFFUSION_HOME"));
         }
+
+        if (logDirectory != null) {
+            if (!logDirectory.exists()) {
+                logDirectory.mkdirs();
+            }
+            else if (!logDirectory.isDirectory()) {
+                throw new MojoExecutionException("Invalid log directory: " + logDirectory);
+            }
+            if (props.getProperty("diffusion.log.dir") == null) {
+                props.setProperty("diffusion.log.dir", logDirectory.toString());
+            }
+        }
+
         return props;
     }
 
@@ -286,9 +302,21 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
         return isPluginArtifact;
     }
 
-    public void finishConfigurationBeforeStart() throws Exception
+    public void finishConfigurationBeforeStart(ServerConfig config) throws Exception
     {
-    }
+        ConnectorConfig connector = config.getConnector("Client Connector");
+        if (connector != null) {
+            connector.setPort(port);
+        }
+        connector = config.getConnector("HTTP Connector");
+        if (connector != null) {
+            connector.setPort(port);
+        }
+        connector = config.getConnector("SSL Connector");
+        if (connector != null) {
+            connector.setPort(sslPort);
+        }
+     }
 
     public void startDiffusion() throws MojoExecutionException
     {
@@ -303,21 +331,9 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
             if (server == null)
                 server = new DiffusionServer(configureSystemProperties(), true);
 
-            //ServerSupport.configureConnectors(server, httpConnector);
+            finishConfigurationBeforeStart(server.getConfig());
 
-            //set up a RequestLog if one is provided and the handle structure
-            //ServerSupport.configureHandlers(server, this.requestLog);
-
-            //do any other configuration required by the
-            //particular Jetty version
-            finishConfigurationBeforeStart();
-
-            // start Diffusion
-            // Thread thread = new Thread(new DiffusionServerRunnable(this.server));
-            // thread.setDaemon(true);
-            // thread.start();
             this.server.start();
-
             getLog().info("Started Diffusion Server");
 
             if ( dumpOnStart )
@@ -330,19 +346,25 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
             throw new MojoExecutionException("Failure", e);
         }
     }
-    
+
+    public void stopDiffusion() throws MojoExecutionException {
+        if (server != null) {
+            try {
+                server.stop();
+                getLog().info("Stopped Diffusion Server");
+            }
+            catch (Exception e) {
+                throw new MojoExecutionException("Failure", e);
+            }
+        }
+    }
+
+    public DiffusionServer getServer() {
+        return server;
+    }
     
     public void configureMonitor()
     { 
-        if(stopPort>0 && stopKey!=null)
-        {
-            /*
-            ShutdownMonitor monitor = ShutdownMonitor.getInstance();
-            monitor.setPort(stopPort);
-            monitor.setKey(stopKey);
-            monitor.setExitVm(false);
-            */
-        }
     }
 
     protected void printSystemProperties ()
@@ -418,44 +440,5 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
         }
         
         return excluded;
-    }
-
-    private class DiffusionServerRunnable implements Runnable {
-        private DiffusionServer server;
-        private volatile boolean shutdown = false;
-
-        DiffusionServerRunnable(DiffusionServer server) {
-            this.server = server;
-        }
-
-        public void shutdown() {
-            this.shutdown = true;
-            synchronized (this) {
-                this.notifyAll();
-            }
-        }
-
-        @Override
-        public void run() {
-            try {
-                this.server.start();
-                synchronized (this) {
-                    while (!shutdown) {
-                        try {
-                            this.wait();
-                        }
-                        catch (InterruptedException e) {
-                            getLog().error("Shutdown interrupted", e);
-                        }
-                    }
-                }
-                if (shutdown) {
-                    server.stop();
-                }
-            }
-            catch (APIException ae) {
-                getLog().error("Could not start Diffusion server", ae);
-            }
-        }
     }
 }
