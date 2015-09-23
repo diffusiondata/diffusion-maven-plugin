@@ -88,6 +88,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
 
     /**
      * Directory to store Diffusion log files.
+     * This relies on features only available in Diffusion 5.6 or later.
      *
      * @parameter property="${project.build.directory}/diffusion-server"
      */
@@ -183,9 +184,10 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
     
     /**
      * A wrapper for the Server object
-     * @parameter
      */
     protected DiffusionServer server;
+
+    protected String diffusionHome;
 
     public abstract void checkPomConfiguration() throws MojoExecutionException;    
     
@@ -230,6 +232,8 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
         if (props.getProperty("diffusion.home") == null && System.getenv("DIFFUSION_HOME") != null) {
             props.setProperty("diffusion.home", System.getenv("DIFFUSION_HOME"));
         }
+
+        diffusionHome = props.getProperty("diffusion.home");
 
         if (logDirectory != null) {
             if (!logDirectory.exists()) {

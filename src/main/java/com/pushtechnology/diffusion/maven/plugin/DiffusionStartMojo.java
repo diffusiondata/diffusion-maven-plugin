@@ -129,6 +129,15 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
         LogReader(File logDirectory, ServerConfig config) throws IOException {
             logFile = new File(logDirectory, config.getLogging().getDefaultLogDirectory());
             logFile = new File(logFile, getServerLogFileName(config));
+            // On older versions of Diffusion we cannot control where the log files go
+            if (!logFile.exists() && diffusionHome != null) {
+                File alt = new File(diffusionHome, config.getLogging().getDefaultLogDirectory());
+                alt = new File(alt, getServerLogFileName(config));
+                if (alt.exists()) {
+                    logFile = alt;
+                }
+            }
+            getLog().info("Monitoring log file at " + logFile.toString());
         }
 
         public synchronized boolean isStarted() {
