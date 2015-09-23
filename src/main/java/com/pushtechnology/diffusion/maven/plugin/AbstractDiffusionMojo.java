@@ -42,6 +42,7 @@ import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -52,16 +53,14 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
     /**
      * Whether or not to include dependencies on the plugin's classpath with &lt;scope&gt;provided&lt;/scope&gt;
      * Use WITH CAUTION as you may wind up with duplicate jars/classes.
-     * 
-     * @parameter  default-value="false"
      */
+    @Parameter(defaultValue = "false")
     protected boolean useProvidedScope;
     
     /**
      * List of goals that are NOT to be used
-     * 
-     * @parameter
      */
+    @Parameter
     protected String[] excludedGoals;
     
     /**
@@ -70,9 +69,8 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
      * Note that these properties will NOT override System properties
      * that have been set on the command line, by the JVM, or directly 
      * in the POM via systemProperties. Optional.
-     * 
-     * @parameter property="diffusion.systemPropertiesFile"
      */
+    @Parameter(property = "diffusion.systemPropertiesFile")
     protected File systemPropertiesFile;
 
     
@@ -82,105 +80,74 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
      * that have been set on the command line or by the JVM. They WILL 
      * override System properties that have been set via systemPropertiesFile.
      * Optional.
-     * @parameter
      */
+    @Parameter
     protected SystemProperties systemProperties;
 
     /**
      * Directory to store Diffusion log files.
      * This relies on features only available in Diffusion 5.6 or later.
-     *
-     * @parameter property="${project.build.directory}/diffusion-server"
      */
+    @Parameter(defaultValue="${project.build.directory}/diffusion-server")
     protected File logDirectory;
     
     
     /**
      * Comma separated list of a diffusion xml configuration files whose contents
      * will be applied before any plugin configuration. Optional.
-     * 
-     * 
-     * @parameter alias="diffusionConfig"
      */
+    @Parameter(alias = "diffusionConfig")
     protected String diffusionConfigDir;
 
     /**
      * Diffusion Server port
-     *
-     * @parameter default-value="8080"
      */
+    @Parameter(defaultValue = "8080")
     protected int port;
 
     /**
      * Diffusion Server SSL port
-     *
-     * @parameter default-value="8443"
      */
+    @Parameter(defaultValue = "8443")
     protected int sslPort;
     
 
     /**
      * Use the dump() facility of Diffusion to print out the server configuration to logging
-     * 
-     * @parameter property="dumponStart" default-value="false"
      */
+    @Parameter(property = "dumponStart", defaultValue = "false")
     protected boolean dumpOnStart;
     
     
     /**  
      * Skip this mojo execution.
-     * 
-     * @parameter property="diffusion.skip" default-value="false"
      */
+    @Parameter(property = "diffusion.skip", defaultValue="false" )
     protected boolean skip;
 
     /**
      * Number of milliseconds to wait for the server to start.
-     *
-     * @parameter default-value="60000"
      */
+    @Parameter(defaultValue="60000" )
     protected long serverStartTimeout = 60000;
 
     /**
      * Whether to wait for server deployments to finish before declaring victory
-     *
-     * @parameter default-value="true"
      */
+    @Parameter(defaultValue="true" )
     protected boolean waitForDeployments = true;
 
-    /**
-     * The maven project.
-     *
-     * @parameter default-value="${project}"
-     * @readonly
-     */
+    @Parameter(defaultValue="${project}", readonly=true, required=true)
     protected MavenProject project;
-
     
-    /**
-     * The artifacts for the project.
-     * 
-     * @parameter default-value="${project.artifacts}"
-     * @readonly
-     */
+    @Parameter(defaultValue="${project.artifacts}", readonly=true, required=true)
     protected Set projectArtifacts;
     
-    
-    /** 
-     * @parameter default-value="${mojoExecution}" 
-     * @readonly
-     */
+    @Parameter(defaultValue="${mojoExecution}", readonly=true, required=true)
     protected org.apache.maven.plugin.MojoExecution execution;
     
-
-    /**
-     * The artifacts for the plugin itself.
-     * 
-     * @parameter default-value="${plugin.artifacts}"
-     * @readonly
-     */
+    @Parameter(defaultValue="${plugin.artifacts}", readonly=true, required=true)
     protected List pluginArtifacts;
-    
     
     /**
      * A wrapper for the Server object
@@ -196,6 +163,9 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
      */
     public void execute() throws MojoExecutionException, MojoFailureException
     {
+        if (this.project == null) {
+            throw new MojoExecutionException("No project could be found");
+        }
         getLog().info("Configuring Diffusion for project: " + this.project.getName());
         if (skip)
         {
@@ -320,6 +290,8 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo
         if (connector != null) {
             connector.setPort(sslPort);
         }
+        // Async pretty useless for testing
+        config.getLogging().setAsyncLogging(false);
      }
 
     public void startDiffusion() throws MojoExecutionException
