@@ -16,10 +16,16 @@
 package com.pushtechnology.diffusion.maven.plugin;
 
 import java.io.File;
+import java.util.Arrays;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.project.MavenProject;
+import org.mockito.Mock;
+
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Unit tests for {@link com.pushtechnology.diffusion.maven.plugin.AbstractDiffusionMojo}.
@@ -35,9 +41,18 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
     private File buildDirectory;
     private File simplePom;
 
+    @Mock
+    private Artifact pluginArtifact;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        initMocks(this);
+
+        String home = System.getenv("DIFFUSION_HOME");
+        assertNotNull(home);
+        when(pluginArtifact.getFile()).thenReturn(new File(home + "/lib/diffusion.jar"));
 
         testBaseDirectory.mkdirs();
         buildDirectory = File.createTempFile("build", "", testBaseDirectory);
@@ -57,8 +72,11 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
         final DiffusionStartMojo mojo = (DiffusionStartMojo) lookupMojo("start", simplePom);
 
         setVariableValueToObject(mojo, "logDirectory", buildDirectory.getAbsoluteFile());
+        setVariableValueToObject(mojo, "serverStartTimeout", 5000);
         setVariableValueToObject(mojo, "execution",
                 new DiffusionExecutionStub(null, "start", "boot"));
+        setVariableValueToObject(mojo, "pluginArtifacts", Arrays.asList(new
+                Artifact[]{pluginArtifact}));
 
         return mojo;
     }

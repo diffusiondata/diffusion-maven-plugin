@@ -1,6 +1,7 @@
 //
 //  ========================================================================
 //  Copyright (c) 1995-2015 Mort Bay Consulting Pty. Ltd.
+//  Copyright (c) 2015 Push Technology Ltd.
 //  ------------------------------------------------------------------------
 //  All rights reserved. This program and the accompanying materials
 //  are made available under the terms of the Eclipse Public License v1.0
@@ -18,7 +19,7 @@
 
 package com.pushtechnology.diffusion.maven.plugin;
 
-import com.pushtechnology.diffusion.api.server.DiffusionServer;
+import com.pushtechnology.diffusion.api.server.Diffusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -37,7 +38,7 @@ public class DiffusionStopMojo extends AbstractDiffusionMojo {
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        server = (DiffusionServer) project.getProperties().get("startedServerInstance");
+        server = (Diffusion) project.getProperties().get("startedServerInstance");
         stopDiffusion();
     }
 }

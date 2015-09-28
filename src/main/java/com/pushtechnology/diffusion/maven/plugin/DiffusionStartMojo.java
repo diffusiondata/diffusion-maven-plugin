@@ -1,6 +1,7 @@
 //
 //  ========================================================================
 //  Copyright (c) 1995-2015 Mort Bay Consulting Pty. Ltd.
+//  Copyright (c) 2015 Push Technology Ltd.
 //  ------------------------------------------------------------------------
 //  All rights reserved. This program and the accompanying materials
 //  are made available under the terms of the Eclipse Public License v1.0
@@ -26,9 +27,14 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.plaf.nimbus.State;
 
 import com.pushtechnology.diffusion.api.LogDescription;
 import com.pushtechnology.diffusion.api.config.ServerConfig;
+import com.pushtechnology.diffusion.api.server.Diffusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -47,29 +53,27 @@ import org.apache.maven.plugins.annotations.Mojo;
 @Mojo(name = "start", defaultPhase = LifecyclePhase.VALIDATE)
 public class DiffusionStartMojo extends AbstractDiffusionMojo {
 
-    private LogReader reader;
-
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         super.execute();
         if (waitForDeployments) {
-            long timeout = System.currentTimeMillis() + serverStartTimeout;
-            Thread thr = new Thread(reader);
-            thr.start();
-            while (!reader.isStarted() && timeout > System.currentTimeMillis()) {
-                synchronized (reader) {
-                    try {
-                        reader.wait(100);
-                        timeout -= 100;
-                    }
-                    catch (InterruptedException e) {
-                        throw new MojoExecutionException(e.getMessage(), e);
+            final CountDownLatch startLock = new CountDownLatch(1);
+            server.addLifecycleListener(new Diffusion.LifecycleListener() {
+                @Override
+                public void onStateChanged(Diffusion.State state) {
+                    if (state == Diffusion.State.STARTED_DEPLOYED) {
+                        startLock.countDown();
                     }
                 }
+            });
+
+            try {
+                if (!startLock.await(serverStartTimeout, TimeUnit.MILLISECONDS)) {
+                    throw new MojoExecutionException("Server failed to start after " + serverStartTimeout / 1000 + "s");
+                }
             }
-            if (!reader.isStarted()) {
-                reader.stop();
-                throw new MojoExecutionException("Server failed to start after " + serverStartTimeout / 1000 + "s");
+            catch (InterruptedException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
             }
         }
         project.getProperties().put("startedServerInstance", server);
@@ -92,7 +96,6 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
     @Override
     public void finishConfigurationBeforeStart(ServerConfig config) throws Exception {
         super.finishConfigurationBeforeStart(config);
-        reader = new LogReader(logDirectory, config);
     }
 
     /**
