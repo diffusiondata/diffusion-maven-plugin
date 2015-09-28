@@ -1,22 +1,20 @@
-//
-//  ========================================================================
-//  Copyright (c) 1995-2015 Mort Bay Consulting Pty. Ltd.
-//  Copyright (c) 2015 Push Technology Ltd.
-//  ------------------------------------------------------------------------
-//  All rights reserved. This program and the accompanying materials
-//  are made available under the terms of the Eclipse Public License v1.0
-//  and Apache License v2.0 which accompanies this distribution.
-//
-//      The Eclipse Public License is available at
-//      http://www.eclipse.org/legal/epl-v10.html
-//
-//      The Apache License v2.0 is available at
-//      http://www.opensource.org/licenses/apache2.0.php
-//
-//  You may elect to redistribute this code under either of these licenses.
-//  ========================================================================
-//
-
+/*
+ * Copyright (C) 2015 Push Technology Ltd.
+ * Copyright (c) 1995-2015 Mort Bay Consulting Pty. Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Derived in part from the jetty-maven-plugin and redistributed under ASL 2.0.
+ */
 package com.pushtechnology.diffusion.maven.plugin;
 
 import java.io.BufferedReader;
@@ -29,8 +27,6 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import javax.swing.plaf.nimbus.State;
 
 import com.pushtechnology.diffusion.api.LogDescription;
 import com.pushtechnology.diffusion.api.config.ServerConfig;
@@ -123,6 +119,7 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
 
     /**
      * Class to monitor the diffusion log file looking for the magic message "Diffusion finished deploying"
+     * Not used currently. Would be useful for older versions of Diffusion.
      */
     private class LogReader implements Runnable {
         private File logFile;
