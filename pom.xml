@@ -20,6 +20,17 @@
         </bundle-symbolic-name>
     </properties>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>push-nexus</id>
+            <url>http://nexus.pushtechnology.com:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>push-nexus</id>
+            <url>http://nexus.pushtechnology.com:8081/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>push-nexus</id>
@@ -30,6 +41,13 @@
         </repository>
     </repositories>
 
+    <scm>
+        <url>https://github.com/pushtechnology/diffusion-maven-plugin</url>
+        <connection>scm:git:https://github.com/pushtechnology/diffusion-maven-plugin</connection>
+        <developerConnection>scm:git:ssh://git@github.com/pushtechnology/diffusion-maven-plugin.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <build>
         <plugins>
             <plugin>
@@ -37,6 +55,12 @@
                 <configuration>
                     <skip>false</skip>
                     <reuseForks>false</reuseForks>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>false</skip>
                 </configuration>
             </plugin>
             <plugin>
