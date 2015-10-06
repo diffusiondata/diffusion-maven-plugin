@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.pushtechnology.diffusion.api.LogDescription;
 import com.pushtechnology.diffusion.api.config.ServerConfig;
-import com.pushtechnology.diffusion.api.server.Diffusion;
+import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -54,10 +54,10 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
         super.execute();
         if (waitForDeployments) {
             final CountDownLatch startLock = new CountDownLatch(1);
-            server.addLifecycleListener(new Diffusion.LifecycleListener() {
+            server.addLifecycleListener(new EmbeddedDiffusion.LifecycleListener() {
                 @Override
-                public void onStateChanged(Diffusion.State state) {
-                    if (state == Diffusion.State.STARTED_DEPLOYED) {
+                public void onStateChanged(EmbeddedDiffusion.State state) {
+                    if (state == EmbeddedDiffusion.State.STARTED) {
                         startLock.countDown();
                     }
                 }

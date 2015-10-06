@@ -36,7 +36,7 @@ public class SystemProperties
 {
     private final Map<String, SystemProperty> properties;
     private boolean force;
-    
+
     public SystemProperties()
     {
         properties = new HashMap<>();
@@ -51,8 +51,8 @@ public class SystemProperties
     {
         return this.force;
     }
-    
-    
+
+
     public void setSystemProperty (SystemProperty prop)
     {
         properties.put(prop.getName(), prop);

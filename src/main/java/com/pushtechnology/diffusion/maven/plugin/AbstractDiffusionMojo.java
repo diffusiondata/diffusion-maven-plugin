@@ -35,7 +35,7 @@ import java.util.Set;
 
 import com.pushtechnology.diffusion.api.config.ConnectorConfig;
 import com.pushtechnology.diffusion.api.config.ServerConfig;
-import com.pushtechnology.diffusion.api.server.Diffusion;
+import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -148,8 +148,9 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     /**
      * A wrapper for the Server object
      */
-    protected Diffusion server;
+    protected EmbeddedDiffusion server;
 
+    @Parameter(property = "diffuson.home")
     protected String diffusionHome;
 
     protected ClassLoader serverClassLoader;
@@ -191,12 +192,17 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
             }
         }
 
-        // Fix up diffusion.home from environment if set.
-        if (props.getProperty("diffusion.home") == null && System.getenv("DIFFUSION_HOME") != null) {
-            props.setProperty("diffusion.home", System.getenv("DIFFUSION_HOME"));
+        if (diffusionHome != null && diffusionHome.length() > 0) {
+            props.setProperty("diffusion.home", diffusionHome);
         }
-
-        diffusionHome = props.getProperty("diffusion.home");
+        // Fix up diffusion.home from environment if set.
+        else if (props.getProperty("diffusion.home") == null && System.getenv("DIFFUSION_HOME") != null) {
+            diffusionHome = System.getenv("DIFFUSION_HOME");
+            props.setProperty("diffusion.home", diffusionHome);
+        }
+        else {
+            diffusionHome = props.getProperty("diffusion.home");
+        }
 
         if (logDirectory != null) {
             if (!logDirectory.exists()) {
@@ -270,9 +276,9 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
                 // A small subset of classes necessary for communicating with
                 // the Diffusion interface.
                 final Set<String> sharedClasses = new HashSet<>(asList(
-                        Diffusion.class.getName(),
-                        Diffusion.LifecycleListener.class.getName(),
-                        Diffusion.State.class.getName(),
+                        EmbeddedDiffusion.class.getName(),
+                        EmbeddedDiffusion.LifecycleListener.class.getName(),
+                        EmbeddedDiffusion.State.class.getName(),
                         "com.pushtechnology.diffusion.api.conflation.*",
                         com.pushtechnology.diffusion.api.LogDescription.class.getName(),
                         com.pushtechnology.diffusion.api.LogDescription.LogLevel.class.getName(),
@@ -369,7 +375,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
         }
     }
 
-    public Diffusion getServer() {
+    public EmbeddedDiffusion getServer() {
         return server;
     }
 

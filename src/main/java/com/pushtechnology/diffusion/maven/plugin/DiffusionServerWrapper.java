@@ -17,7 +17,7 @@ package com.pushtechnology.diffusion.maven.plugin;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
-import com.pushtechnology.diffusion.api.server.Diffusion;
+import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 import com.pushtechnology.diffusion.api.server.DiffusionServer;
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -26,9 +26,9 @@ import org.apache.maven.plugin.MojoExecutionException;
  */
 public class DiffusionServerWrapper {
 
-    public static Diffusion createServer(Properties properties, ClassLoader serverClassLoader) throws MojoExecutionException {
+    public static EmbeddedDiffusion createServer(Properties properties, ClassLoader serverClassLoader) throws MojoExecutionException {
         try {
-            return (Diffusion) Class.forName(
+            return (EmbeddedDiffusion) Class.forName(
                     DiffusionServer.class.getName(),
                     true,
                     serverClassLoader)

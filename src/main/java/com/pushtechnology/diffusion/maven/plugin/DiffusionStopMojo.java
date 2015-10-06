@@ -17,7 +17,7 @@
  */
 package com.pushtechnology.diffusion.maven.plugin;
 
-import com.pushtechnology.diffusion.api.server.Diffusion;
+import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -36,7 +36,7 @@ public class DiffusionStopMojo extends AbstractDiffusionMojo {
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        server = (Diffusion) project.getProperties().get("startedServerInstance");
+        server = (EmbeddedDiffusion) project.getProperties().get("startedServerInstance");
         stopDiffusion();
     }
 }
