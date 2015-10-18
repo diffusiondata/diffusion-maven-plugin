@@ -17,6 +17,7 @@ package com.pushtechnology.diffusion.maven.plugin;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -70,6 +71,7 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
 
     private DiffusionStartMojo getStartMojo(final File buildDirectory) throws Exception {
         final DiffusionStartMojo mojo = (DiffusionStartMojo) lookupMojo("start", simplePom);
+        mojo.setPluginContext(new HashMap());
 
         setVariableValueToObject(mojo, "logDirectory", buildDirectory.getAbsoluteFile());
         setVariableValueToObject(mojo, "serverStartTimeout", 5000);
@@ -112,6 +114,8 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
     public void testBasicStop() throws Exception {
 
         final DiffusionStopMojo mojo = (DiffusionStopMojo) lookupMojo("stop", simplePom);
+        final HashMap pluginContext = new HashMap();
+        mojo.setPluginContext(pluginContext);
         final DiffusionStartMojo startmojo = getStartMojo(buildDirectory);
         MavenProject project = new DiffusionProjectStub(buildDirectory, simplePom);
         setVariableValueToObject(startmojo, "project", project);
@@ -120,7 +124,7 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
         setVariableValueToObject(mojo, "execution",
                 new DiffusionExecutionStub(null, "stop", "shutdown"));
 
-        project.getProperties().put("startedServerInstance", startmojo.server);
+        pluginContext.put("startedServerInstance", startmojo.server);
         setVariableValueToObject(mojo, "project", project);
         mojo.execute();
         assertTrue(mojo.getServer().isStopped());
