@@ -72,7 +72,7 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
                 throw new MojoExecutionException(e.getMessage(), e);
             }
         }
-        project.getProperties().put("startedServerInstance", server);
+        getPluginContext().put("startedServerInstance", server);
     }
 
     /**

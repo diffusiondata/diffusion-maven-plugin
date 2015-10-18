@@ -36,7 +36,7 @@ public class DiffusionStopMojo extends AbstractDiffusionMojo {
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        server = (EmbeddedDiffusion) project.getProperties().get("startedServerInstance");
+        server = (EmbeddedDiffusion) getPluginContext().get("startedServerInstance");
         stopDiffusion();
     }
 }
