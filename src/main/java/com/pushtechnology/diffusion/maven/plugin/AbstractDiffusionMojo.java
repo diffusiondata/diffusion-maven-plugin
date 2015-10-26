@@ -19,8 +19,11 @@ package com.pushtechnology.diffusion.maven.plugin;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.DatagramSocket;
 import java.net.MalformedURLException;
+import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ import com.pushtechnology.diffusion.api.config.ServerConfig;
 import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -320,14 +324,23 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     public void finishConfigurationBeforeStart(ServerConfig config) throws Exception {
         ConnectorConfig connector = config.getConnector("Client Connector");
         if (connector != null) {
+            if (!portAvailable(port)) {
+                throw new MojoExecutionException("Port " + port + " is not available and thus the server will not be able to start");
+            }
             connector.setPort(port);
         }
         connector = config.getConnector("HTTP Connector");
         if (connector != null) {
+            if (!portAvailable(port)) {
+                throw new MojoExecutionException("Port " + port + " is not available and thus the server will not be able to start");
+            }
             connector.setPort(port);
         }
         connector = config.getConnector("SSL Connector");
         if (connector != null) {
+            if (!portAvailable(sslPort)) {
+                throw new MojoExecutionException("Port " + sslPort + " is not available and thus the server will not be able to start");
+            }
             connector.setPort(sslPort);
         }
         // Async pretty useless for testing
@@ -446,5 +459,37 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
         }
 
         return excluded;
+    }
+
+    /**
+     * Check if a port is available. From SO.
+     * @param port
+     * @return
+     */
+    private static boolean portAvailable(int port) {
+        ServerSocket ss = null;
+        DatagramSocket ds = null;
+        try {
+            ss = new ServerSocket(port);
+            ss.setReuseAddress(true);
+            ds = new DatagramSocket(port);
+            ds.setReuseAddress(true);
+            return true;
+        } catch (IOException e) {
+        } finally {
+            if (ds != null) {
+                ds.close();
+            }
+
+            if (ss != null) {
+                try {
+                    ss.close();
+                } catch (IOException e) {
+                /* should not be thrown */
+                }
+            }
+        }
+
+        return false;
     }
 }

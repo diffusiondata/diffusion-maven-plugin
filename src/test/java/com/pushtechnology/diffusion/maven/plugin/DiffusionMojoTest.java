@@ -16,6 +16,7 @@
 package com.pushtechnology.diffusion.maven.plugin;
 
 import java.io.File;
+import java.net.ServerSocket;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -109,6 +110,25 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
         assertTrue(mojo.getServer().isStarted());
         // Clean up
         mojo.stopDiffusion();
+    }
+
+    public void testStartPortConflict() throws Exception {
+
+        final DiffusionStartMojo mojo = getStartMojo(buildDirectory);
+        setVariableValueToObject(mojo, "project",
+                new DiffusionProjectStub(buildDirectory, simplePom));
+        setVariableValueToObject(mojo, "port", 8080);
+        ServerSocket ss = new ServerSocket(8080);
+
+        try {
+            mojo.execute();
+            assertTrue(false);
+        }
+        catch (MojoExecutionException mee) {
+            // should get here
+        }
+        ss.close();
+        assertFalse(mojo.getServer().isStarted());
     }
 
     public void testBasicStop() throws Exception {
