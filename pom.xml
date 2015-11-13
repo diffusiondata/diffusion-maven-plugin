@@ -11,33 +11,31 @@
     <groupId>com.pushtechnology.diffusion.maven.plugin</groupId>
     <packaging>maven-plugin</packaging>
     <name>Diffusion :: Diffusion Maven Plugin</name>
-    <description>Diffusion maven plugins</description>
-    <version>1.0-SNAPSHOT</version>
+    <description>Diffusion maven plugin</description>
+    <version>1.0</version>
     <properties>
         <mavenVersion>3.3.1</mavenVersion>
         <pluginToolsVersion>3.4</pluginToolsVersion>
         <bundle-symbolic-name>${project.groupId}.maven.plugin
         </bundle-symbolic-name>
-    </properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>push-nexus</id>
-            <url>http://nexus.pushtechnology.com:8081/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>push-nexus</id>
-            <url>http://nexus.pushtechnology.com:8081/nexus/content/repositories/releases/</url>
-        </repository>
-    </distributionManagement>
+        <!-- To publish the site documentation: -->
+        <!-- mvn clean site:site scm-publish:publish-scm -Dscmpublish.dryRun=true -->
+        <!-- and if that works: mvn scm-publish:publish-scm -->
+        <scm-publish.checkoutDirectory>${project.build.directory}/scmpublish</scm-publish.checkoutDirectory>
+        <scm-publish.scmBranch>gh-pages</scm-publish.scmBranch>
+        <scm-publish.pubScmUrl>scm:git:https://github.com/pushtechnology/diffusion-maven-plugin</scm-publish.pubScmUrl>
+        <scm-publish.siteDocOutputDirectory>${project.reporting.outputDirectory}</scm-publish.siteDocOutputDirectory>
+
+        <!-- To deploy to the push repository -->
+        <!-- mvn -DaltDeploymentRepository=push-repository::default::scpexe:deployer@download.pushtechnology.com/var/www/files/maven clean deploy -->
+    </properties>
 
     <repositories>
         <repository>
-            <id>push-nexus</id>
-            <name>Internal Releases</name>
-            <url>
-                http://nexus.pushtechnology.com:8081/nexus/content/repositories/releases/
-            </url>
+            <id>push-repository</id>
+            <url>http://download.pushtechnology.com/maven/</url>
         </repository>
     </repositories>
 

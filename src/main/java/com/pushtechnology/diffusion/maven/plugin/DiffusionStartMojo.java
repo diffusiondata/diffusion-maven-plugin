@@ -43,10 +43,10 @@ import org.apache.maven.plugins.annotations.Mojo;
  * </p>
  *
  * @requiresDependencyResolution test
- * @execute phase="validate"
+ * @execute phase="pre-integration-test"
  * @description Runs diffusion directly from a maven project from a binding to an execution in your pom
  */
-@Mojo(name = "start", defaultPhase = LifecyclePhase.VALIDATE)
+@Mojo(name = "start", defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
 public class DiffusionStartMojo extends AbstractDiffusionMojo {
 
     @Override

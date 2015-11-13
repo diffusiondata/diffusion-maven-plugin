@@ -26,9 +26,10 @@ import org.apache.maven.plugins.annotations.Mojo;
 /**
  * DiffusionStopMojo - stops a running instance of Diffusion.
  *
+ * @execute phase="post-integration-test"
  * @description Stops diffusion
  */
-@Mojo(name = "stop", defaultPhase = LifecyclePhase.VALIDATE)
+@Mojo(name = "stop", defaultPhase = LifecyclePhase.POST_INTEGRATION_TEST)
 public class DiffusionStopMojo extends AbstractDiffusionMojo {
     @Override
     public void checkPomConfiguration() throws MojoExecutionException {
