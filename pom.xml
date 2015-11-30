@@ -29,7 +29,7 @@
         <scm-publish.siteDocOutputDirectory>${project.reporting.outputDirectory}</scm-publish.siteDocOutputDirectory>
 
         <!-- To deploy to the push repository -->
-        <!-- mvn -DaltDeploymentRepository=push-repository::default::scpexe:deployer@download.pushtechnology.com/var/www/files/maven clean deploy -->
+        <!-- mvn -DaltDeploymentRepository=push-repository::default::scpexe://deployer@download.pushtechnology.com:/var/www/files/maven clean deploy -->
     </properties>
 
     <repositories>
