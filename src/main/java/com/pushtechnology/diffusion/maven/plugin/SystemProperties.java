@@ -29,7 +29,7 @@ import java.util.Map;
  * Map of name to SystemProperty.
  * 
  * When a SystemProperty instance is added, if it has not
- * been already set (eg via the command line java system property)
+ * been already set (for example, via the command line Java system property)
  * then it will be set.
  */
 public class SystemProperties
