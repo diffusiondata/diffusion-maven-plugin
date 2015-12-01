@@ -51,18 +51,18 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 
 /**
- * Common base class for most diffusion mojos.
+ * Common base class for most Diffusion mojos.
  */
 public abstract class AbstractDiffusionMojo extends AbstractMojo {
     /**
      * Whether or not to include dependencies on the plugin's classpath with &lt;scope&gt;provided&lt;/scope&gt;
-     * Use WITH CAUTION as you may wind up with duplicate jars/classes.
+     * Use with caution. This can cause duplicate jars/classes.
      */
     @Parameter(defaultValue = "false")
     protected boolean useProvidedScope;
 
     /**
-     * List of goals that are NOT to be used
+     * List of goals that are not to be used
      */
     @Parameter
     protected String[] excludedGoals;
@@ -70,7 +70,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     /**
      * File containing system properties to be set before execution
      * <p/>
-     * Note that these properties will NOT override System properties
+     * Note that these properties will not override system properties
      * that have been set on the command line, by the JVM, or directly
      * in the POM via systemProperties. Optional.
      */
@@ -79,9 +79,9 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
 
     /**
      * System properties to set before execution.
-     * Note that these properties will NOT override System properties
-     * that have been set on the command line or by the JVM. They WILL
-     * override System properties that have been set via systemPropertiesFile.
+     * Note that these properties will not override system properties
+     * that have been set on the command line or by the JVM. 
+     * They will override system properties that have been set via systemPropertiesFile.
      * Optional.
      */
     @Parameter
@@ -95,20 +95,20 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     protected File logDirectory;
 
     /**
-     * Comma separated list of a diffusion xml configuration files whose contents
+     * Comma-separated list of Diffusion XML configuration files whose contents
      * will be applied before any plugin configuration. Optional.
      */
     @Parameter(alias = "diffusionConfig")
     protected String diffusionConfigDir;
 
     /**
-     * Diffusion Server port
+     * Diffusion server port
      */
     @Parameter(defaultValue = "8080")
     protected int port;
 
     /**
-     * Diffusion Server SSL port
+     * Diffusion server SSL port
      */
     @Parameter(defaultValue = "8443")
     protected int sslPort;
@@ -126,13 +126,13 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     protected boolean skip;
 
     /**
-     * Number of milliseconds to wait for the server to start.
+     * Number of milliseconds to wait for the Diffusion server to start.
      */
     @Parameter(defaultValue = "60000")
     protected long serverStartTimeout = 60000;
 
     /**
-     * Whether to wait for server deployments to finish before declaring victory
+     * Whether to wait for Diffusion server deployments to finish before declaring success
      */
     @Parameter(defaultValue = "true")
     protected boolean waitForDeployments = true;
@@ -224,10 +224,9 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     }
 
     public void configurePluginClasspath() throws MojoExecutionException {
-        // if we are configured to include the provided dependencies on the plugin's classpath
-        // we first
-        // try and filter out ones that will clash with jars that are plugin dependencies, then
-        // create a new classloader that we setup in the parent chain.
+        // If we are configured to include the provided dependencies on the plugin's classpath,
+        // we first try and filter out ones that will clash with jars that are plugin dependencies,
+        // then create a new classloader that we setup in the parent chain.
         if (useProvidedScope) {
             try {
                 List<URL> provided = new ArrayList<URL>();
