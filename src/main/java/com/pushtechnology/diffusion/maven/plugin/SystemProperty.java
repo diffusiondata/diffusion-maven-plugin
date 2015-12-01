@@ -24,8 +24,8 @@ package com.pushtechnology.diffusion.maven.plugin;
  * Provides the ability to set System properties
  * for the mojo execution. A value will only 
  * be set if it is not set already. That is, if
- * it was set on the command line or by the system,
- * it won't be overridden by settings in the 
+ * it has been set on the command line or by the system,
+ * it will not be overridden by settings in the 
  * plugin's configuration.
  *
  */
