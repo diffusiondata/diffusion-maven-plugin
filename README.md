@@ -1,11 +1,11 @@
 # diffusion-maven-plugin
 
-The diffusion-maven-plugin is responsible for starting and stopping a Diffusion server for the purpose of running tests against that server.
+The diffusion-maven-plugin enables you to start and stop a Diffusion server from within Maven for the purpose of running tests against that Diffusion server.
 
 ## Goals overview
 
-diffusion:start is the default goal invoked during the pre-integration-test phase for projects using this mojo. 
-diffusion:stop is the default goal invoked during the post-integration-test phase for projects using this mojo.
+* diffusion:start is the default goal invoked during the pre-integration-test phase for projects using this mojo. 
+* diffusion:stop is the default goal invoked during the post-integration-test phase for projects using this mojo.
 
 ## Usage
 
@@ -48,5 +48,5 @@ diffusion:stop is the default goal invoked during the post-integration-test phas
                 </dependencies>
             </plugin>
 
-Note that you should generally provide the location of your diffusion installation as a dependency and property.
-If you do not then the value of DIFFUSION_HOME will be used if set.
+Note: Provide the location of your Diffusion server installation as a dependency and property.
+If you do not provide this as a dependency and property, the value of DIFFUSION_HOME will be used if set.
