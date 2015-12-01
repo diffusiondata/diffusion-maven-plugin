@@ -38,13 +38,13 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * <p>
- * This goal is similar to the diffusion:run goal, EXCEPT that it is designed to be bound to an execution inside your pom, rather
- * than being run from the command line.
+ * This goal is similar to the diffusion:run goal, except that it is designed to be bound to an 
+ * execution inside your POM, rather than being run from the command line.
  * </p>
  *
  * @requiresDependencyResolution test
  * @execute phase="pre-integration-test"
- * @description Runs diffusion directly from a maven project from a binding to an execution in your pom
+ * @description Runs Diffusion directly from a Maven project from a binding to an execution in your POM
  */
 @Mojo(name = "start", defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
 public class DiffusionStartMojo extends AbstractDiffusionMojo {
@@ -76,7 +76,7 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
     }
 
     /**
-     * Verify the configuration given in the pom.
+     * Verify the configuration given in the POM.
      *
      * @see AbstractDiffusionMojo#checkPomConfiguration()
      */
@@ -95,7 +95,7 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
     }
 
     /**
-     * A little bit of magic for figuring out the name of the server log file
+     * Figures out the name of the Diffusion server log file
      *
      * @param config
      * @return
@@ -118,7 +118,7 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
     }
 
     /**
-     * Class to monitor the diffusion log file looking for the magic message "Diffusion finished deploying"
+     * Class to monitor the Diffusion log file looking for the message "Diffusion finished deploying"
      * Not used currently. Would be useful for older versions of Diffusion.
      */
     private class LogReader implements Runnable {
