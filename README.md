@@ -4,49 +4,28 @@ The diffusion-maven-plugin enables you to start and stop a Diffusion server from
 
 ## Goals overview
 
-* diffusion:start is the default goal invoked during the pre-integration-test phase for projects using this mojo. 
-* diffusion:stop is the default goal invoked during the post-integration-test phase for projects using this mojo.
+* diffusion:start is the default goal invoked during the pre-integration-test phase for projects using this mojo. This goal starts a Diffusion server.
+* diffusion:stop is the default goal invoked during the post-integration-test phase for projects using this mojo. This goal stops a Diffusion server.
+
+## Dependencies
+
+Use the maven-failsafe-plugin to run your integration tests.
 
 ## Usage
 
-            <plugin>
-                <artifactId>diffusion-maven-plugin</artifactId>
-                <groupId>com.pushtechnology.diffusion.maven.plugin</groupId>
-                <version>1.0</version>
-                <configuration>
-                    <systemPropeties>
-                        <diffusion.home>${project.build.directory}/runtime</diffusion.home>
-                    </systemPropeties>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start-diffusion</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                        <configuration>
-                            <serverStartTimeout>10000</serverStartTimeout>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>stop-diffusion</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
+The `diffusion-maven-plugin/src/main/examples/pom.xml` file shows how to include the maven-failsafe-plugin and diffusion-maven-plugin in your test suite POM file.
+
+When you define the execution of the `diffusion:start` goal, you can configure a server start timeout. If the server takes longer than this time to start, the goal fails.
+            <configuration>
+                        <serverStartTimeout>10000</serverStartTimeout>
+            </configuration>
+
+Note: Provide the location of your Diffusion server installation as a dependency and property. For example:
+            <dependency>
                         <groupId>com.pushtechnology.diffusion</groupId>
                         <artifactId>diffusion</artifactId>
                         <version>${project.version}</version>
                         <scope>system</scope>
-                        <systemPath>${project.build.directory}/runtime/lib/diffusion.jar</systemPath>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-Note: Provide the location of your Diffusion server installation as a dependency and property.
+                        <systemPath>${env.DIFFUSION_HOME}/lib/diffusion.jar</systemPath>
+            </dependency>
 If you do not provide this as a dependency and property, the value of DIFFUSION_HOME will be used if set.
