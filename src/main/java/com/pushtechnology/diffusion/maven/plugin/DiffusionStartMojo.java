@@ -52,6 +52,10 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         super.execute();
+        if (skip) {
+            getLog().info("Skipping Diffusion start: diffusion.skip==true");
+            return;
+        }
         if (waitForDeployments) {
             final CountDownLatch startLock = new CountDownLatch(1);
             server.addLifecycleListener(new EmbeddedDiffusion.LifecycleListener() {

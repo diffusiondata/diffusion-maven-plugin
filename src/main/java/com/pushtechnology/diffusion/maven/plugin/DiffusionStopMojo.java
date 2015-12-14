@@ -37,6 +37,10 @@ public class DiffusionStopMojo extends AbstractDiffusionMojo {
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
+            getLog().info("Skipping Diffusion start: diffusion.skip==true");
+            return;
+        }
         server = (EmbeddedDiffusion) getPluginContext().get("startedServerInstance");
         stopDiffusion();
     }
