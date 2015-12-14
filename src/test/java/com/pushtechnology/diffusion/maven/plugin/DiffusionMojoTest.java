@@ -131,6 +131,17 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
         assertFalse(mojo.getServer().isStarted());
     }
 
+    public void testStartSkip() throws Exception {
+
+        final DiffusionStartMojo mojo = getStartMojo(buildDirectory);
+        setVariableValueToObject(mojo, "project",
+                new DiffusionProjectStub(buildDirectory, simplePom));
+        setVariableValueToObject(mojo, "skip", true);
+
+        mojo.execute();
+        assertNull(mojo.getServer());
+    }
+
     public void testBasicStop() throws Exception {
 
         final DiffusionStopMojo mojo = (DiffusionStopMojo) lookupMojo("stop", simplePom);
