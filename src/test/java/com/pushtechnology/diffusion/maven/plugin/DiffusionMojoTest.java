@@ -76,6 +76,7 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
 
         setVariableValueToObject(mojo, "logDirectory", buildDirectory.getAbsoluteFile());
         setVariableValueToObject(mojo, "serverStartTimeout", 5000);
+        setVariableValueToObject(mojo, "maxMessageSize", 32768);
         setVariableValueToObject(mojo, "execution",
                 new DiffusionExecutionStub(null, "start", "boot"));
         setVariableValueToObject(mojo, "pluginArtifacts", Arrays.asList(new

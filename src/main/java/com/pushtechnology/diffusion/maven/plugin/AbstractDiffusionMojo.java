@@ -114,6 +114,12 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     protected int sslPort;
 
     /**
+     * Diffusion maxMessageSize
+     */
+    @Parameter(defaultValue = "32768")
+    protected int maxMessageSize;
+
+    /**
      * Use the dump() facility of Diffusion to print out the server configuration to logging
      */
     @Parameter(property = "dumponStart", defaultValue = "false")
@@ -344,6 +350,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
         }
         // Async pretty useless for testing
         config.getLogging().setAsyncLogging(false);
+        config.setMaximumMessageSize(maxMessageSize);
     }
 
     public void startDiffusion() throws MojoExecutionException {

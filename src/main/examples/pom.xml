@@ -56,15 +56,7 @@
             <plugin>
                 <artifactId>diffusion-maven-plugin</artifactId>
                 <groupId>com.pushtechnology.diffusion.maven.plugin</groupId>
-                <version>1.0</version>
-                <configuration>
-                    <systemProperties>
-                        <systemProperty>
-                            <name>diffusion.home</name>
-                            <value>${env.DIFFUSION_HOME}</value>
-                        </systemProperty>
-                    </systemProperties>
-                </configuration>
+                <version>1.0.2</version>
                 <executions>
                     <execution>
                         <id>start-diffusion</id>
@@ -84,15 +76,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.pushtechnology.diffusion</groupId>
-                        <artifactId>diffusion</artifactId>
-                        <version>${project.version}</version>
-                        <scope>system</scope>
-                        <systemPath>${env.DIFFUSION_HOME}/lib/diffusion.jar</systemPath>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
