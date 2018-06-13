@@ -17,6 +17,9 @@
  */
 package com.pushtechnology.diffusion.maven.plugin;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,19 +39,16 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import com.pushtechnology.diffusion.api.config.ConnectorConfig;
-import com.pushtechnology.diffusion.api.config.ServerConfig;
-import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
+import com.pushtechnology.diffusion.api.config.ConnectorConfig;
+import com.pushtechnology.diffusion.api.config.ServerConfig;
+import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 
 /**
  * Common base class for most Diffusion mojos.
@@ -80,7 +80,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     /**
      * System properties to set before execution.
      * Note that these properties will not override system properties
-     * that have been set on the command line or by the JVM. 
+     * that have been set on the command line or by the JVM.
      * They will override system properties that have been set via systemPropertiesFile.
      * Optional.
      */
@@ -170,6 +170,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     /**
      * @see org.apache.maven.plugin.Mojo#execute()
      */
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (this.project == null) {
             throw new MojoExecutionException("No project could be found");
@@ -195,7 +196,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     public Properties configureSystemProperties() throws MojoExecutionException {
         Properties props = new Properties();
         if (systemProperties != null) {
-            Iterator itor = systemProperties.getSystemProperties().iterator();
+            final Iterator itor = systemProperties.getSystemProperties().iterator();
             while (itor.hasNext()) {
                 SystemProperty prop = (SystemProperty) itor.next();
                 props.put(prop.getName(), prop.getValue());
@@ -235,7 +236,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
         // then create a new classloader that we setup in the parent chain.
         if (useProvidedScope) {
             try {
-                List<URL> provided = new ArrayList<URL>();
+                List<URL> provided = new ArrayList<>();
                 URL[] urls = null;
 
                 for (Iterator<Artifact> iter = projectArtifacts.iterator(); iter.hasNext(); ) {
@@ -267,7 +268,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
     public void configureServerClasspath() throws MojoExecutionException {
 
         try {
-            List<URL> provided = new ArrayList<URL>();
+            List<URL> provided = new ArrayList<>();
             URL[] urls = null;
 
             for (Iterator<Artifact> iter = pluginArtifacts.iterator(); iter.hasNext(); ) {
