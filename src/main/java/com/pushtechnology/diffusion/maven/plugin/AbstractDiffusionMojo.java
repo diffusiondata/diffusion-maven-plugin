@@ -292,7 +292,10 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
                         "com.pushtechnology.diffusion.api.conflation.*",
                         com.pushtechnology.diffusion.api.LogDescription.class.getName(),
                         com.pushtechnology.diffusion.api.LogDescription.LogLevel.class.getName(),
-                        "com.pushtechnology.diffusion.api.config.*"
+                        "com.pushtechnology.diffusion.api.config.*",
+                        // Allow JAXB to be packaged as a library.
+                        "javax.xml.*",
+                        "com.sun,*"
                 ));
 
                 serverClassLoader = new BlockingClassLoader(provided,
