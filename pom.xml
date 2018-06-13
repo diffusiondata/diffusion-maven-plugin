@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>com.pushtechnology.sample</groupId>
         <version>1.2</version>
@@ -12,7 +10,7 @@
     <packaging>maven-plugin</packaging>
     <name>Diffusion :: Diffusion Maven Plugin</name>
     <description>Diffusion maven plugin</description>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <properties>
         <mavenVersion>3.3.1</mavenVersion>
         <pluginToolsVersion>3.4</pluginToolsVersion>
@@ -43,7 +41,7 @@
         <url>https://github.com/pushtechnology/diffusion-maven-plugin</url>
         <connection>scm:git:https://github.com/pushtechnology/diffusion-maven-plugin</connection>
         <developerConnection>scm:git:ssh://git@github.com/pushtechnology/diffusion-maven-plugin.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>diffusion-maven-plugin-1.0.3</tag>
     </scm>
 
     <build>
