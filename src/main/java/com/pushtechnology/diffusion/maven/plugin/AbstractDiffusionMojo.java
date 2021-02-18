@@ -47,6 +47,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import com.pushtechnology.diffusion.api.config.ConnectorConfig;
+import com.pushtechnology.diffusion.api.config.ManagementConfig;
 import com.pushtechnology.diffusion.api.config.ServerConfig;
 import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 
@@ -332,6 +333,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
 
     public void finishConfigurationBeforeStart(ServerConfig config) throws Exception {
         ConnectorConfig connector = config.getConnector("Client Connector");
+        ManagementConfig mgmt = config.getManagement();
         if (connector != null) {
             if (!portAvailable(port)) {
                 throw new MojoExecutionException("Port " + port + " is not available and thus the server will not be able to start");
@@ -355,6 +357,9 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
         // Async pretty useless for testing
         config.getLogging().setAsyncLogging(false);
         config.setMaximumMessageSize(maxMessageSize);
+        mgmt.setEnabled(false);
+
+
     }
 
     public void startDiffusion() throws MojoExecutionException {
