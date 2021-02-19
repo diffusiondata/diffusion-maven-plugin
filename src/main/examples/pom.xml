@@ -52,7 +52,7 @@
             <plugin>
                 <artifactId>diffusion-maven-plugin</artifactId>
                 <groupId>com.pushtechnology.diffusion.maven.plugin</groupId>
-                <version>1.0.4-SNAPSHOT</version>
+                <version>1.0.3</version>
                 <executions>
                     <execution>
                         <id>start-diffusion</id>

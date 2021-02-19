@@ -1,7 +1,7 @@
 package com.pushtechnology.diffusion.maven.plugin.examples;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -79,7 +79,7 @@ public class DiffusionConnectIT {
         // Wait for the CompletableFuture to complete
         future.get(10, TimeUnit.SECONDS);
 
-        topics.addStream(">foo", String.class, topicStream);
+        topics.addStream("foo", String.class, topicStream);
         topics.subscribe("foo", callback);
         topicUpdate.set("foo", String.class, "bar");
         Thread.sleep(1000);
@@ -88,12 +88,12 @@ public class DiffusionConnectIT {
         verify(callback, timeout(10000)).onComplete();
 
         verify(topicStream, timeout(10000)).onSubscription(
-            isA(String.class),
-            isA(TopicSpecification.class));
+            isNotNull(String.class),
+            isNotNull(TopicSpecification.class));
         verify(topicStream, timeout(10000)).onValue(
-                isA(String.class),
-                isA(TopicSpecification.class),
-                isA(String.class),
-                isA(String.class));
+            isNotNull(String.class),
+            isNotNull(TopicSpecification.class),
+            isNotNull(String.class),
+            isNotNull(String.class));
     }
 }

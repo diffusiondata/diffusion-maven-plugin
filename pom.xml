@@ -10,7 +10,7 @@
     <packaging>maven-plugin</packaging>
     <name>Diffusion :: Diffusion Maven Plugin</name>
     <description>Diffusion maven plugin</description>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.3</version>
     <properties>
         <mavenVersion>3.3.1</mavenVersion>
         <pluginToolsVersion>3.4</pluginToolsVersion>
