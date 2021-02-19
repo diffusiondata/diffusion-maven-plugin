@@ -82,7 +82,6 @@ public class DiffusionConnectIT {
         topics.addStream("foo", String.class, topicStream);
         topics.subscribe("foo", callback);
         topicUpdate.set("foo", String.class, "bar");
-        Thread.sleep(1000);
         topicUpdate.set("foo", String.class, "bars");
 
         verify(callback, timeout(10000)).onComplete();
