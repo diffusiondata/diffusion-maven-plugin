@@ -332,6 +332,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
 
     public void finishConfigurationBeforeStart(ServerConfig config) throws Exception {
         ConnectorConfig connector = config.getConnector("Client Connector");
+        config.getManagement().setEnabled(false);
         if (connector != null) {
             if (!portAvailable(port)) {
                 throw new MojoExecutionException("Port " + port + " is not available and thus the server will not be able to start");
@@ -352,8 +353,6 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
             }
             connector.setPort(sslPort);
         }
-        // Async pretty useless for testing
-        config.getLogging().setAsyncLogging(false);
         config.setMaximumMessageSize(maxMessageSize);
     }
 

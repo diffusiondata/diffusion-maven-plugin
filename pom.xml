@@ -10,13 +10,15 @@
     <packaging>maven-plugin</packaging>
     <name>Diffusion :: Diffusion Maven Plugin</name>
     <description>Diffusion maven plugin</description>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.3</version>
     <properties>
         <mavenVersion>3.3.1</mavenVersion>
         <pluginToolsVersion>3.4</pluginToolsVersion>
         <bundle-symbolic-name>${project.groupId}.maven.plugin
         </bundle-symbolic-name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
         <!-- To publish the site documentation: -->
         <!-- mvn clean site:site scm-publish:publish-scm -Dscmpublish.dryRun=true -->
@@ -46,6 +48,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>       
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
