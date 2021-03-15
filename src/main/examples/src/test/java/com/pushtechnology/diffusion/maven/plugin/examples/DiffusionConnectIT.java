@@ -87,12 +87,12 @@ public class DiffusionConnectIT {
         verify(callback, timeout(10000)).onComplete();
 
         verify(topicStream, timeout(10000)).onSubscription(
-            isNotNull(String.class),
-            isNotNull(TopicSpecification.class));
+            isNotNull(),
+            isNotNull());
         verify(topicStream, timeout(10000)).onValue(
-            isNotNull(String.class),
-            isNotNull(TopicSpecification.class),
-            isNotNull(String.class),
-            isNotNull(String.class));
+            isNotNull(),
+            isNotNull(),
+            isNotNull(),
+            isNotNull());
     }
 }
