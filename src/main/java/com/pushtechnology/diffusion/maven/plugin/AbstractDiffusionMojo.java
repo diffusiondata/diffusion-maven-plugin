@@ -290,8 +290,9 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
                         EmbeddedDiffusion.LifecycleListener.class.getName(),
                         EmbeddedDiffusion.State.class.getName(),
                         "com.pushtechnology.diffusion.api.conflation.*",
-                        com.pushtechnology.diffusion.api.LogDescription.class.getName(),
-                        com.pushtechnology.diffusion.api.LogDescription.LogLevel.class.getName(),
+                        // Needed by Diffusion 6.7 and earlier:
+                        "com.pushtechnology.diffusion.api.LogDescription",
+                        "com.pushtechnology.diffusion.api.LogDescription$LogLevel",
                         "com.pushtechnology.diffusion.api.config.*",
                         // Allow JAXB to be packaged as a library.
                         "javax.xml.*",
