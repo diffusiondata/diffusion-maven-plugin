@@ -78,13 +78,6 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
     protected String diffusionHome;
 
     /**
-     * Directory to store Diffusion log files.
-     * This relies on features only available in Diffusion 5.6 or later.
-     */
-    @Parameter(defaultValue = "${project.build.directory}/diffusion-server")
-    protected File logDirectory;
-
-    /**
      * Comma-separated list of Diffusion XML configuration files whose contents
      * will be applied before any plugin configuration. Optional.
      */
@@ -246,18 +239,6 @@ public class DiffusionStartMojo extends AbstractDiffusionMojo {
         }
         else {
             diffusionHome = props.getProperty("diffusion.home");
-        }
-
-        if (logDirectory != null) {
-            if (!logDirectory.exists()) {
-                logDirectory.mkdirs();
-            }
-            else if (!logDirectory.isDirectory()) {
-                throw new MojoExecutionException("Invalid log directory: " + logDirectory);
-            }
-            if (props.getProperty("diffusion.log.dir") == null) {
-                props.setProperty("diffusion.log.dir", logDirectory.toString());
-            }
         }
 
         return props;
