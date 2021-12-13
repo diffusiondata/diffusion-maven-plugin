@@ -40,7 +40,8 @@ public class DiffusionServerWrapper {
                 InvocationTargetException |
                 NoSuchMethodException |
                 ClassNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
+            e.printStackTrace();
+            throw new MojoExecutionException(e.toString(), e);
         }
 
     }
