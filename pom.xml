@@ -10,7 +10,7 @@
     <packaging>maven-plugin</packaging>
     <name>Diffusion :: Diffusion Maven Plugin</name>
     <description>Diffusion maven plugin</description>
-    <version>1.0.10</version>
+    <version>1.0.11-SNAPSHOT</version>
     <properties>
         <mavenVersion>3.6.0</mavenVersion>
         <pluginToolsVersion>3.6.2</pluginToolsVersion>
@@ -35,7 +35,7 @@
         <url>https://github.com/pushtechnology/diffusion-maven-plugin</url>
         <connection>scm:git:https://github.com/pushtechnology/diffusion-maven-plugin</connection>
         <developerConnection>scm:git:ssh://git@github.com/pushtechnology/diffusion-maven-plugin.git</developerConnection>
-        <tag>diffusion-maven-plugin-1.0.10</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <build>
