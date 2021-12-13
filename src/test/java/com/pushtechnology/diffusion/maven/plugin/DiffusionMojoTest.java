@@ -129,7 +129,7 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
             // should get here
         }
         ss.close();
-        assertFalse(mojo.getServer().isStarted());
+        assertNull(mojo.getServer());
     }
 
     public void testStartSkip() throws Exception {
@@ -156,7 +156,7 @@ public class DiffusionMojoTest extends AbstractMojoTestCase {
         setVariableValueToObject(mojo, "execution",
                 new DiffusionExecutionStub(null, "stop", "shutdown"));
 
-        pluginContext.put("startedServerInstance", startmojo.server);
+        pluginContext.put("startedServerInstance", startmojo.getServer());
         setVariableValueToObject(mojo, "project", project);
         mojo.execute();
         assertTrue(mojo.getServer().isStopped());

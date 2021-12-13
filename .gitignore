@@ -2,3 +2,5 @@
 target/
 diffusion-maven-plugin.iml
 .project
+.classpath
+.settings/

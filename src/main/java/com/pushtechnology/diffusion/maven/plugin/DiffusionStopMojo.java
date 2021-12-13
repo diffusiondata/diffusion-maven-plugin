@@ -17,31 +17,23 @@
  */
 package com.pushtechnology.diffusion.maven.plugin;
 
-import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Execute;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Stops a running instance of Diffusion.
  */
-@Execute(phase = LifecyclePhase.POST_INTEGRATION_TEST)
-@Mojo(name = "stop", defaultPhase = LifecyclePhase.POST_INTEGRATION_TEST)
+@Mojo(name = "stop")
 public class DiffusionStopMojo extends AbstractDiffusionMojo {
-    @Override
-    public void checkPomConfiguration() throws MojoExecutionException {
-
-    }
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (skip) {
-            getLog().info("Skipping Diffusion start: diffusion.skip==true");
+            getLog().info("Skipping Diffusion stop: diffusion.skip==true");
             return;
         }
-        server = (EmbeddedDiffusion) getPluginContext().get("startedServerInstance");
+
         stopDiffusion();
     }
 }

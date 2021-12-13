@@ -20,16 +20,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <!-- To publish the site documentation: -->
-        <!-- mvn clean site:site scm-publish:publish-scm -Dscmpublish.dryRun=true -->
-        <!-- and if that works: mvn scm-publish:publish-scm -->
-        <scm-publish.checkoutDirectory>${project.build.directory}/scmpublish</scm-publish.checkoutDirectory>
-        <scm-publish.scmBranch>gh-pages</scm-publish.scmBranch>
-        <scm-publish.pubScmUrl>scm:git:https://github.com/pushtechnology/diffusion-maven-plugin</scm-publish.pubScmUrl>
-        <scm-publish.siteDocOutputDirectory>${project.reporting.outputDirectory}</scm-publish.siteDocOutputDirectory>
-
-        <!-- To deploy to the push repository -->
-        <!-- mvn -DaltDeploymentRepository=push-repository::default::scpexe://deployer@download.int.pushtechnology.com:/var/www/files/maven clean deploy -->
+        <!-- To release to the push repository -->
+        <!-- mvn -Darguments=-DaltDeploymentRepository=push-repository::default::scpexe://deployer@download.int.pushtechnology.com:/var/www/files/maven release:prepare release:perform -->
     </properties>
 
     <repositories>
