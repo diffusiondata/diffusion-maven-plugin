@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Push Technology Ltd.
+ * Copyright (C) 2015, 2021 Push Technology Ltd.
  * Copyright (c) 1995-2015 Mort Bay Consulting Pty. Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,7 +69,7 @@ public abstract class AbstractDiffusionMojo extends AbstractMojo {
 
     /**
      * File containing system properties to be set before execution
-     * <p/>
+     * <p>
      * Note that these properties will not override system properties
      * that have been set on the command line, by the JVM, or directly
      * in the POM via systemProperties. Optional.

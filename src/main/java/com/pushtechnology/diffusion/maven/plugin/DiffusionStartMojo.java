@@ -23,23 +23,23 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import com.pushtechnology.diffusion.api.config.ServerConfig;
 import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 
 /**
- * <p>
- * This goal is similar to the diffusion:run goal, except that it is designed to be bound to an
- * execution inside your POM, rather than being run from the command line.
- * </p>
- *
- * @requiresDependencyResolution test
- * @execute phase="pre-integration-test"
- * @description Runs Diffusion directly from a Maven project from a binding to an execution in your POM
+ * Runs Diffusion directly from a Maven project from a binding to an execution
+ * in your POM.
  */
-@Mojo(name = "start", defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
+@Execute(phase = LifecyclePhase.PRE_INTEGRATION_TEST)
+@Mojo(
+    name = "start",
+    defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST,
+    requiresDependencyResolution=ResolutionScope.TEST)
 public class DiffusionStartMojo extends AbstractDiffusionMojo {
 
     @Override

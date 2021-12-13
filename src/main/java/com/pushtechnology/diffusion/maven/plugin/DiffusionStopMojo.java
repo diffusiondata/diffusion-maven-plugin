@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Push Technology Ltd.
+ * Copyright (C) 2015, 2021 Push Technology Ltd.
  * Copyright (c) 1995-2015 Mort Bay Consulting Pty. Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,15 +20,14 @@ package com.pushtechnology.diffusion.maven.plugin;
 import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 /**
- * DiffusionStopMojo - stops a running instance of Diffusion.
- *
- * @execute phase="post-integration-test"
- * @description Stops diffusion
+ * Stops a running instance of Diffusion.
  */
+@Execute(phase = LifecyclePhase.POST_INTEGRATION_TEST)
 @Mojo(name = "stop", defaultPhase = LifecyclePhase.POST_INTEGRATION_TEST)
 public class DiffusionStopMojo extends AbstractDiffusionMojo {
     @Override
@@ -36,6 +35,7 @@ public class DiffusionStopMojo extends AbstractDiffusionMojo {
 
     }
 
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (skip) {
             getLog().info("Skipping Diffusion start: diffusion.skip==true");
