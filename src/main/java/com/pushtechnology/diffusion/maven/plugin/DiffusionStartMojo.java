@@ -41,12 +41,9 @@ import java.util.concurrent.TimeUnit;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-
 import com.pushtechnology.diffusion.api.config.ConnectorConfig;
 import com.pushtechnology.diffusion.api.config.ServerConfig;
 import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
@@ -55,11 +52,9 @@ import com.pushtechnology.diffusion.api.server.EmbeddedDiffusion;
  * Runs Diffusion directly from a Maven project from a binding to an execution
  * in your POM.
  */
-@Execute(phase = LifecyclePhase.PRE_INTEGRATION_TEST)
 @Mojo(
     name = "start",
-    defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST,
-    requiresDependencyResolution=ResolutionScope.TEST)
+    defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
 public class DiffusionStartMojo extends AbstractDiffusionMojo {
 
     /**

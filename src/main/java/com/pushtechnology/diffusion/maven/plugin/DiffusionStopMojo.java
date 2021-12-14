@@ -19,12 +19,15 @@ package com.pushtechnology.diffusion.maven.plugin;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Stops a running instance of Diffusion.
  */
-@Mojo(name = "stop")
+@Mojo(
+    name = "stop",
+    defaultPhase = LifecyclePhase.POST_INTEGRATION_TEST)
 public class DiffusionStopMojo extends AbstractDiffusionMojo {
 
     @Override
